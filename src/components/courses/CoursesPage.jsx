@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {connect} from 'react-redux';
-import {setCourse} from '../../Redux/Actions/setCourseAction';
+import {setCourse,loadCourse} from '../../Redux/Actions/CourseAction';
+import CourseList from './CourseList.jsx';
+import {loadAuthors} from '../../Redux/Actions/AutherAction';
 
-function CoursesPage({courses,setCourses})
+function CoursesPage({courses,setCourses,loadCourses,loadAuthors,authors})
 {
   let [formData,setFormData]= useState({
     title:''
   });
+
+  useEffect(()=>{
+    if(courses.length===0){
+    loadCourses();
+    }
+    console.log("bhijete");
+    if(authors.length===0){
+    loadAuthors().catch(err=>{throw err});
+    }
+  },[])
 
   let handleChange= function(event){
      const {name,value}=event.target;
@@ -33,12 +45,13 @@ function CoursesPage({courses,setCourses})
         <h3>Add Courses</h3>
         <input type="text" onChange={handleChange} name="title" value={formData.title} />
         <input type="submit" />
-        {//console.log(courses)
-          courses.map(course=>(
-            <div key={course.title}>
-                {course.title}
-              </div>
-          ))
+        {console.log(courses[0])}
+        {console.log(authors)}
+        {
+          courses[0]&&authors[0]?
+            <CourseList courses={courses[0]} authors={authors[0]}/>
+          :<div>No Courses Enrolled</div>
+          
         }
        </form>
     </div>
@@ -46,11 +59,14 @@ function CoursesPage({courses,setCourses})
 }
 
 const mapStateToProps=state=>({
-  courses:state.courses.courses
+  courses:state.courses.courses,
+  authors:state.authors.authors
 });
 
 const mapDispatchToProps=dispatch=>({
-  setCourses:(data)=>dispatch(setCourse(data))
+  setCourses:(data)=>dispatch(setCourse(data)),
+  loadCourses:()=>dispatch(loadCourse()),
+  loadAuthors:()=>dispatch(loadAuthors())
 });
 
 export default connect(mapStateToProps,mapDispatchToProps)(CoursesPage);
