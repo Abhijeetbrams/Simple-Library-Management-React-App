@@ -5,11 +5,13 @@ import {setCourse,loadCourse} from '../../Redux/Actions/CourseAction';
 import CourseList from './CourseList.jsx';
 import {loadAuthors} from '../../Redux/Actions/AutherAction';
 
-function CoursesPage({courses,setCourses,loadCourses,loadAuthors,authors})
+import CourseForm from "./CourseForm.jsx";
+import { newCourse } from "../../../tools/mockData";
+import Spinner from "../common/Spinner.jsx";
+
+function CoursesPage({courses,setCourses,loadCourses,
+  loadAuthors,authors,history,isLoading})
 {
-  let [formData,setFormData]= useState({
-    title:''
-  });
 
   useEffect(()=>{
     if(courses.length===0){
@@ -21,30 +23,14 @@ function CoursesPage({courses,setCourses,loadCourses,loadAuthors,authors})
     }
   },[])
 
-  let handleChange= function(event){
-     const {name,value}=event.target;
-     setFormData({...formData,[name]:value});
-     //console.log(formData);
-  }
-
-  let handleSubmit=(event)=>{
-    event.preventDefault();
-    if(formData.title==null)
-    {
-      alert("Please enter the username");
-      return ;
-    }
-    setCourses(formData);
-    console.log(formData);
-  }
 
   return (
     <div>
-      <form  onSubmit={handleSubmit}>
-        <h2>Courses</h2>
-        <h3>Add Courses</h3>
-        <input type="text" onChange={handleChange} name="title" value={formData.title} />
-        <input type="submit" />
+      {isLoading?<Spinner/>:
+      <>
+     <button type="button"  className="btn btn-primary" onClick={()=>history.push('/course')}>
+       Add Course
+      </button>
         {console.log(courses[0])}
         {console.log(authors)}
         {
@@ -53,14 +39,15 @@ function CoursesPage({courses,setCourses,loadCourses,loadAuthors,authors})
           :<div>No Courses Enrolled</div>
           
         }
-       </form>
+       </>}
     </div>
   );
 }
 
 const mapStateToProps=state=>({
   courses:state.courses.courses,
-  authors:state.authors.authors
+  authors:state.authors.authors,
+  isLoading:state.apiCallStatus.apiCallsInProgress>0
 });
 
 const mapDispatchToProps=dispatch=>({
