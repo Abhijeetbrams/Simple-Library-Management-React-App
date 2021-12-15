@@ -33,7 +33,9 @@ function CoursesPage({courses,setCourses,loadCourses,
       </button>
         {console.log(courses[0])}
         {console.log(authors)}
+        
         {
+          
           courses[0]&&authors[0]?
             <CourseList courses={courses[0]} authors={authors[0]}/>
           :<div>No Courses Enrolled</div>

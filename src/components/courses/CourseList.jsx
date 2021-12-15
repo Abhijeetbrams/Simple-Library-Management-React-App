@@ -8,6 +8,7 @@ const CourseList = ({ courses,authors,deleteCourse }) => {
 
   const handleDelete=(id)=>{
    console.log(id);
+   //debugger;
     deleteCourse(id);
 
   }

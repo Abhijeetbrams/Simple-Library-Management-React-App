@@ -21,7 +21,6 @@ export const deleteCourseState=(payload)=>({
     type:"DELETE_COURSE",
     payload
 });
-
 export function loadCourse(){
     return function(dispatch){
         dispatch(beginApiCall())
@@ -54,6 +53,7 @@ export function setCourse(course){
 
 
 export function deleteCourse(id){
+ //   debugger;
     return function(dispatch){
         return courseApi
         .deleteCourse(id)
